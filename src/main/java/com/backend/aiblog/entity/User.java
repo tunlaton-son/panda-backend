@@ -44,6 +44,9 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Post> likedPostList;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<User> following;
+
     @Column(name = "PASSWORD", columnDefinition = "TEXT")
     private String password;
 

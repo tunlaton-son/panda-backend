@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -130,6 +131,9 @@ public class UserService {
     public ResponseEntity<?> getFirstUserByUsername(String username){
         try{
 
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentUserName = authentication.getName();
+
             User user = userRepository.findFirstByUsername(username)
                         .orElse(null);
 
@@ -137,12 +141,21 @@ public class UserService {
                 return new ResponseEntity<>(" USER NOT FOUND", HttpStatus.NO_CONTENT);
             }
 
+            User currentUser = userRepository.findFirstByUsername(currentUserName)
+                    .orElse(null);
+
             UserResponse userResponse = new UserResponse();
             userResponse.setId(user.getId());
             userResponse.setUsername(user.getUsername());
             userResponse.setName(user.getName());
             userResponse.setProfileImage(user.getProfileImage() != null ?  user.getProfileImage():null);
             userResponse.setCoverImage(user.getCoverImage() != null ? user.getCoverImage():null);
+
+            if(currentUser != null){
+                boolean isFollowing = currentUser.getFollowing().parallelStream().anyMatch(e->e.getUsername().equals(username));
+                userResponse.setFollowing(isFollowing);
+            }
+
 
             return new ResponseEntity<>(userResponse, HttpStatus.OK);
         }catch (Exception ex){

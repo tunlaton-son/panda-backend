@@ -21,4 +21,5 @@ public class UserResponse {
     private String username;
     private String profileImage;
     private String coverImage;
+    private boolean following = false;
 }

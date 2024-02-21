@@ -42,4 +42,6 @@ public class UserController {
 
         return userService.patchUser(data, profilePath, profileImage, coverPath, coverImage);
     }
+
+
 }
