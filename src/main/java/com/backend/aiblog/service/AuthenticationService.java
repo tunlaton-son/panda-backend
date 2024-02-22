@@ -37,9 +37,25 @@ public class AuthenticationService {
         var user = userRepository.findFirstByUsername(request.getUsername()).orElseThrow();
 
         var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .refreshToken(refreshToken)
                 .build();
     }
+
+    public AuthenticationResponse authenticateRefreshToken(AuthenticationRequest request) throws IOException {
+
+        var user = userRepository.findFirstByUsername(request.getUsername()).orElseThrow();
+
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
 }
