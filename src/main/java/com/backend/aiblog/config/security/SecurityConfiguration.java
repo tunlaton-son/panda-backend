@@ -45,9 +45,6 @@ public class SecurityConfiguration {
                         .authenticated()
                         .anyRequest()
                         .authenticated())
-                .exceptionHandling(e->e.accessDeniedHandler(accessDeniedHandlerConfig)
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

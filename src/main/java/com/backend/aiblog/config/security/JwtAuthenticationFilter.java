@@ -70,7 +70,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         }  catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
         }
 
         filterChain.doFilter(request, response);

@@ -73,7 +73,7 @@ public class AuthenticationController {
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(@RequestBody AuthenticationRequest request) throws IOException {
 
-        final String userEmail = request.getUsername();
+        final String userEmail = jwtService.extractRefreshTokenUsername(request.getRefreshToken());
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
         final boolean isRefreshTokenValid = jwtService.isRefreshTokenValid(request.getRefreshToken(), userDetails);
