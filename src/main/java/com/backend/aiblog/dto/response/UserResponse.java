@@ -22,4 +22,6 @@ public class UserResponse {
     private String profileImage;
     private String coverImage;
     private boolean following = false;
+    private Integer followings;
+    private Integer followers;
 }

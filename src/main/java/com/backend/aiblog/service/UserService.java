@@ -154,8 +154,12 @@ public class UserService {
             if(currentUser != null){
                 boolean isFollowing = currentUser.getFollowing().parallelStream().anyMatch(e->e.getUsername().equals(username));
                 userResponse.setFollowing(isFollowing);
-            }
 
+                Integer followers = userRepository.findUserByFollowing(user).size();
+                userResponse.setFollowers(followers);
+
+                userResponse.setFollowings(user.getFollowing().size());
+            }
 
             return new ResponseEntity<>(userResponse, HttpStatus.OK);
         }catch (Exception ex){
