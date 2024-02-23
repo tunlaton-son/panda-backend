@@ -19,6 +19,7 @@ import com.backend.aiblog.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -206,17 +207,18 @@ public class PostService {
         }
     }
 
-    public ResponseEntity<?> likePost(String postId, String username){
+    @CachePut(value = "likedPost")
+    public Post likePost(String postId, String username) throws Exception {
         try{
 
             User user = userRepository.findFirstByUsername(username).orElse(null);
             if(user == null){
-                return new ResponseEntity<>("USER NOT FOUND", HttpStatus.NO_CONTENT);
+                throw new Exception("USER NOT FOUND");
             }
 
             Post post = postRepository.findById(UUID.fromString(postId)).orElse(null);
             if(post == null){
-                return new ResponseEntity<>("POST NOT FOUND", HttpStatus.NO_CONTENT);
+                throw new Exception("POST NOT FOUND");
             }
 
             boolean liked = post.getLikedUserList().stream().anyMatch(m->m.getUsername().equals(user.getUsername()));
@@ -226,12 +228,10 @@ public class PostService {
                 post.getLikedUserList().add(user);
             }
 
-            postRepository.save(post);
-
-            return new ResponseEntity<>(post, HttpStatus.OK);
+            return postRepository.save(post);
         }catch (Exception ex){
             logger.error(ex.getMessage());
-            return new ResponseEntity<>(" Like post unsuccessfully", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw ex;
         }
     }
 }

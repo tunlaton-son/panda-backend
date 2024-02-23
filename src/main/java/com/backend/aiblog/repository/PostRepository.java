@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-@EnableRedisRepositories
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
 

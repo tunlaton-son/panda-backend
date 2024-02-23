@@ -48,6 +48,11 @@ public class PostController {
 
     @PatchMapping("/like")
     public ResponseEntity<?> likePostById(@RequestParam String id, @RequestParam String username){
-        return postService.likePost(id, username);
+        try{
+            Post response = postService.likePost(id, username);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity<>("LIKE POST UNSUCCESSFUL: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
