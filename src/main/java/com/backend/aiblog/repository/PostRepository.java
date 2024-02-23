@@ -2,16 +2,19 @@ package com.backend.aiblog.repository;
 
 import com.backend.aiblog.entity.Post;
 import com.backend.aiblog.projection.PostResult;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.stereotype.Repository;
 
 
 import java.util.Optional;
 import java.util.UUID;
 
+@EnableRedisRepositories
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
 

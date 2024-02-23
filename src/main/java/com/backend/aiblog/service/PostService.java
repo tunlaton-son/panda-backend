@@ -19,6 +19,7 @@ import com.backend.aiblog.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +81,8 @@ public class PostService {
         }
     }
 
-    public ResponseEntity<?> getPosts(int page, int size, String username){
+    @Cacheable(value = "PaginationResponse")
+    public PaginationResponse getPosts(int page, int size, String username){
         try{
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -125,10 +127,10 @@ public class PostService {
             if(postList.getContent().size() == 10){
                 response.setNextCursor(nextCursor);
             }
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return response;
         }catch (Exception ex) {
             logger.error(ex.getMessage());
-            return new ResponseEntity<>(" get posts unsuccessfully", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw  ex;
         }
     }
 
